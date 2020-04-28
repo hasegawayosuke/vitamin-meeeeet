@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "ビタミンMeeeeet",
+  "version": "1.0",
+
+  "description": "Google Meetでカメラ替わりに動画ファイルを流したり、マイクに重ねて音源ファイルを再生したりできます。",
+  "icons":  {
+    "16": "icon16.png",
+    "48": "icon48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["loader.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "https://meet.google.com/"
+
+  ],
+  "web_accessible_resources": [
+    "cs.js"
+  ]
+}
