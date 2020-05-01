@@ -194,38 +194,32 @@ function main () {
       return new Promise((resolve, reject) => {
         navigator.mediaDevices._getUserMedia(constraints)
           .then((stream) => {
-            if (constraints.video) {
-              console.log(constraints)
-              const vt = stream.getVideoTracks()
-              console.log(vt)
-              debugger;
-            }
-            const desktopCapture = constraints?.video?.mandatory?.chromeSource === 'desktop'
-            if (constraints.video && !desktopCapture && videoType === 'file') {
+            const desktopVideo = constraints?.video?.mandatory?.chromeMediaSource === 'desktop'
+            const desktopAudio = onstraints?.audio?.mandatory?.chromeMediaSource === 'system'
+            if (constraints.video && !desktopVideo && videoType === 'file') {
               const vt = stream.getVideoTracks()
               vt.find((track) => {
                 if (!/^(?:window|screen):[\d]+:[\d]$/.test(track.label)) {
                   const newStream = videoSubtype === 'image' ? canvas.captureStream(10) : video.captureStream()
                   stream.removeTrack(vt[0])
                   stream.addTrack(newStream.getVideoTracks()[0])
-                  return true;
+                  return true
                 }
               })
-            } else if (constraints.video && !desktopCapture && videoType === 'composite') {
+            } else if (constraints.video && !desktopVideo && videoType === 'composite') {
               const vt = stream.getVideoTracks()
               vt.find((track) => {
                 if (!/^(?:window|screen):[\d]+:[\d]$/.test(track.label)) {
-                  console.log(track.label)
                   const _constraints = JSON.parse(JSON.stringify(constraints))
                   setTimeout(startComposite, 200, _constraints)
                   const newStream = canvas.captureStream(24)
                   stream.removeTrack(vt[0])
                   stream.addTrack(newStream.getVideoTracks()[0])
-                  return true;
+                  return true
                 }
               })
             }
-            if (constraints.audio) {
+            if (constraints.audio && !desktopAudio) {
               const at = stream.getAudioTracks()
               const micSource = audioContext.createMediaStreamSource(stream)
               micSource.connect(audioOutput)
