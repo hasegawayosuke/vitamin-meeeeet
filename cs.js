@@ -195,7 +195,7 @@ function main () {
         navigator.mediaDevices._getUserMedia(constraints)
           .then((stream) => {
             const desktopVideo = constraints?.video?.mandatory?.chromeMediaSource === 'desktop'
-            const desktopAudio = onstraints?.audio?.mandatory?.chromeMediaSource === 'system'
+            const desktopAudio = constraints?.audio?.mandatory?.chromeMediaSource === 'system'
             if (constraints.video && !desktopVideo && videoType === 'file') {
               const vt = stream.getVideoTracks()
               vt.find((track) => {
@@ -231,6 +231,7 @@ function main () {
             resolve(stream)
           })
           .catch((err) => {
+            console.error(err)
             reject(err)
           })
       })
